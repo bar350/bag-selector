@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+	<h2>{{ boardgame.name }}</h2>
+	<div class="row">
+		<div class="col s4">
+			<img src="{{ boardgame.image }}" style="width:100%" />
+		</div>
+		<div class="col s4">
+			<div id="chart_div"></div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s5">
+			<div class="row">
+				<label class="col s4">BGG ID: </label>
+				<div class="col s8">{{ boardgame.id }}</div>
+			</div>
+			<div class="row">
+				<label class="col s4">Players: </label>
+				<div class="col s8">{{ boardgame.min_players }} - {{ boardgame.max_players}}</div>
+			</div>
+			<div class="row">
+				<label class="col s4">Best At: </label>
+				<div class="col s8">{{ boardgame.get_best_count }}</div>
+			</div>
+			<div class="row">
+				<label class="col s4">Recommended: </label>
+				<div class="col s8">{{ boardgame.get_recommended_count }}</div>
+			</div>
+			<div class="row">
+				<label class="col s4">Playing Time: </label>
+				<div class="col s8">{{ boardgame.playing_time }}</div>
+			</div>
+			<div class="row">
+				<label class="col s4">Rating: </label>
+				<div class="col s8">{{ boardgame.rating_average }}</div>
+			</div>
+			<div class="row">
+				<label class="col s4">Bayes Rating: </label>
+				<div class="col s8">{{ boardgame.rating_bayes_average }}</div>
+			</div>
+			<div class="row">
+				<label class="col s4">Categories: </label>
+				<div class="col s8">{{ boardgame.categories|join:', ' }}</div>
+			</div>
+			<div class="row">
+				<label class="col s4">Mechanics: </label>
+				<div class="col s8">{{ boardgame.mechanics|join:', ' }}</div>
+			</div>
+			<div class="row">
+				<label class="col s2">Description: </label>
+				<div class="col s10"><pre style="font-family: inherit; white-space: pre-wrap;">{{ boardgame.description }}</pre></div>
+			</div>
+		</div>
+		<div class="col s5 offset-s1">
+			{% if boardgame.ranks|length %}
+				<h5>Ranks: </h5>
+				{% for rank in boardgame.ranks %}
+					<div class="row">
+						<label class="col s4">
+							{{ rank.friendlyname }}
+						</label>
+						<div class="col s8">
+							{{ rank.value }}
+						</div>
+					</div>
+				{% endfor %}
+			{% endif %}
+			{% if boardgame.expansions|length %}
+				<h5>Expansions: </h5>
+				{% for expansion in boardgame.expansions %}
+					<div class="row">
+						<div class="col s8 offset-s4">
+							{{ expansion.name }}
+						</div>
+					</div>
+				{% endfor %}
+			{% endif %}
+		</div>
+	</div>
+</div>
+	    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+      data = {{ boardgame.jsonify|safe }};
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Player Count');
+        data.addColumn('number', 'Not Recommended');
+        data.addColumn('number', 'Recommended');
+        data.addColumn('number', 'Best');
+        data.addRows([
+          {% for suggestion in boardgame.player_suggestions|dictsort:"numeric_player_count" %}
+          	[ '{{ suggestion.player_count }}', {{ suggestion.not_recommended }},
+          		{{ suggestion.recommended }}, {{ suggestion.best }} ],
+          {% endfor %}
+        ]);
+
+        // Set chart options
+        var options = {'title':'Player Suggestions',
+                       'width':600,
+                       'height':300,
+        			   'legend': { position: 'top', maxLines: 3 },
+                   	   'isStacked': 'percent',
+	                   'series': {
+						    0:{color:'red'},
+						    1:{color:'yellow'},
+						    2:{color:'green'}
+						  }
+						};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+{% endblock content %}
