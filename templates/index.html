@@ -23,7 +23,7 @@
 							<label class="col-sm-5">
 								Exclude Expansions
 							</label>
-							<div class="col-sm-6">
+							<div class="col-sm-5">
 								<div class="togglebutton">
 								    <label>
 								      Off
@@ -43,7 +43,7 @@
 					</div>
 					<div class="well well-sm" v-if="filters.players.shown">
 						<div class="row">
-							<label class="col-sm-11">
+							<label class="col-sm-10">
 								Player Count  (${ playerCount })
 							</label>
 							<div class="col-sm-1">
@@ -67,7 +67,7 @@
 					</div>
 					<div class="well well-sm" v-if="filters.playing_time.shown">
 						<div class="row">
-							<label class="col-sm-11">
+							<label class="col-sm-10">
 								Playing Time  (${ playTime })
 							</label>
 							<div class="col-sm-1">
@@ -91,7 +91,7 @@
 					</div>
 					<div class="well well-sm" v-if="filters.weight.shown">
 						<div class="row">
-							<label class="col-sm-11">
+							<label class="col-sm-10">
 								Boardgame Weight (${ gameWeight })
 							</label>
 							<div class="col-sm-1">
@@ -115,7 +115,7 @@
 					</div>
 					<div class="well well-sm" v-if="filters.rating.shown">
 						<div class="row">
-							<label class="col-sm-11">
+							<label class="col-sm-10">
 								Boardgame Rating  (${ gameRate })
 							</label>
 							<div class="col-sm-1">
@@ -139,7 +139,7 @@
 					</div>
 					<div class="well well-sm" v-if="filters.categories.shown">
 						<div class="row">
-							<div class="col-sm-11 form-group" style="margin:0 0;">
+							<div class="col-sm-10 form-group" style="margin:0 0;">
 								<select class="form-control" @change="categorySelection">
 										<option value="" disabled selected>Choose a category</option>
 										<option :value="category" 
@@ -170,7 +170,7 @@
 					</div>
 					<div class="well well-sm" v-if="filters.mechanics.shown">
 						<div class="row">
-							<div class="col-sm-11 form-group" style="margin:0 0;">
+							<div class="col-sm-10 form-group" style="margin:0 0;">
 								<select class="form-control" @change="mechanicSelection">
 										<option value="" disabled selected>Choose a Mechanic</option>
 										<option :value="mechanic" 
@@ -200,7 +200,7 @@
 					</div>
 					<div class="well well-sm" v-if="filters.suggested.shown">
 						<div class="row">
-							<div class="col-sm-11">
+							<div class="col-sm-10">
 								<label>(Poll) Number of Players</label>
 							</div>
 							<div class="col-sm-1">
@@ -497,7 +497,7 @@
 					return false;
 				},
 				changeExpansions: function() {
-					this.filters.expansions = !this.filters.expansions;
+					this.filters.expansions.value = !this.filters.expansions.value;
 					this.computeHidden()
 				},
 				computeHidden: function() {

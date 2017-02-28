@@ -38,9 +38,9 @@ class BoardGameExtension(object):
 
 
 def createBGGClient():
-    redis_backend = CacheBackendRedis(ttl=2592000)
-    # redis_backend = CacheBackendRedis(ttl=30)
-    bgg = BGGClient(cache=redis_backend)
+    # redis_backend = CacheBackendRedis(ttl=2592000)
+    # bgg = BGGClient(cache=redis_backend)
+    bgg = BGGClient()
     return bgg
 
 
