@@ -7,250 +7,294 @@
 		<div id="app">
 			<div class="row">
 				<div class="col-sm-3">
-					<h5>Filter Options</h5>
-					<div class="row form-group">
-						<div class="col-sm-10 col-sm-offset-1">
-							<select class="form-control" @change="addFilter">
-								<option disabled selected value="">Add Filter</option>
-								<option v-for="(filterOpts, filter) in filters"
-										:value="filter"
-										v-if="!filterOpts.shown">${ filterOpts.name }</option>
-							</select>
+					<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+						<div class="panel panel-default">
+							<div class="panel-heading" role="tab" id="filterHeading">
+							  	<h4 class="panel-title">
+							    	<a role="button" data-toggle="collapse" data-parent="#accordion" href="#filterOpts" aria-expanded="true" aria-controls="collapseOne">
+							      		Filter Options
+							    	</a>
+							  	</h4>
+							</div>
+							<div id="filterOpts" class="panel-collapse collapse" role="tabpanel" aria-labelledby="filterOpts">
+						  		<div class="panel-body">
+						    		<div class="row form-group">
+										<div class="col-sm-10 col-sm-offset-1">
+											<select class="form-control" @change="addFilter">
+												<option disabled selected value="">Add Filter</option>
+												<option v-for="(filterOpts, filter) in filters"
+														:value="filter"
+														v-if="!filterOpts.shown">${ filterOpts.name }</option>
+											</select>
+										</div>
+									</div>
+									<div class="well well-sm" v-if="filters.expansions.shown">
+										<div class="row">
+											<label class="col-sm-5">
+												Exclude Expansions
+											</label>
+											<div class="col-sm-5">
+												<div class="togglebutton">
+												    <label>
+												      Off
+												      <input type="checkbox" id="expansions" @change="changeExpansions">
+												      <span class="toggle"></span>
+												      On
+												    </label>
+												</div>
+											</div>
+											<div class="col-sm-1">
+												<a href="#" 
+													@click.prevent="removeFilter('expansions')" 
+													class="pull-right">
+													<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
+											</div>
+										</div>
+									</div>
+									<div class="well well-sm" v-if="filters.players.shown">
+										<div class="row">
+											<label class="col-sm-10">
+												Player Count  (${ playerCount })
+											</label>
+											<div class="col-sm-1">
+												<a href="#" 
+													@click.prevent="removeFilter('players')" 
+													class="pull-right">
+													<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-10 col-sm-offset-1">
+												<div class="slider shor">
+													<slider :slider-value="filters.players.value" 
+														:slider-min="1" 
+														:slider-max="endPlayerCount" 
+														:slider-step="1" 
+														v-on:updated="updateSlider('players',$event)"></slider>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="well well-sm" v-if="filters.playing_time.shown">
+										<div class="row">
+											<label class="col-sm-10">
+												Playing Time  (${ playTime })
+											</label>
+											<div class="col-sm-1">
+												<a href="#" 
+													@click.prevent="removeFilter('playing_time')" 
+													class="pull-right">
+													<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-10 col-sm-offset-1">
+												<div class="slider shor">
+													<slider :slider-value="filters.playing_time.value" 
+														:slider-min="0" 
+														:slider-max="endPlayTime" 
+														:slider-step="15" 
+														v-on:updated="updateSlider('playing_time', $event)"></slider>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="well well-sm" v-if="filters.weight.shown">
+										<div class="row">
+											<label class="col-sm-10">
+												Boardgame Weight (${ gameWeight })
+											</label>
+											<div class="col-sm-1">
+												<a href="#" 
+													@click.prevent="removeFilter('weight')" 
+													class="pull-right">
+													<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-10 col-sm-offset-1">
+												<div class="slider shor">
+													<slider :slider-value="filters.weight.value" 
+														:slider-min="0" 
+														:slider-max="5" 
+														:slider-step=".2" 
+														v-on:updated="updateSlider('weight', $event)"></slider>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="well well-sm" v-if="filters.rating.shown">
+										<div class="row">
+											<label class="col-sm-10">
+												Boardgame Rating  (${ gameRate })
+											</label>
+											<div class="col-sm-1">
+												<a href="#" 
+													@click.prevent="removeFilter('rating')" 
+													class="pull-right">
+													<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-10 col-sm-offset-1">
+												<div class="slider shor">
+													<slider :slider-value="filters.rating.value" 
+														:slider-min="0" 
+														:slider-max="10" 
+														:slider-step=".5" 
+														v-on:updated="updateSlider('rating', $event)"></slider>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="well well-sm" v-if="filters.categories.shown">
+										<div class="row">
+											<div class="col-sm-10 form-group" style="margin:0 0;">
+												<select class="form-control" @change="categorySelection">
+														<option value="" disabled selected>Choose a category</option>
+														<option :value="category" 
+																v-for="category in categories">${ category }</option>
+												</select>
+											</div>
+											<div class="col-sm-1">
+												<a href="#" 
+													@click.prevent="removeFilter('categories')" 
+													class="pull-right">
+													<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
+											</div>
+										</div>
+										<div class="row" v-for="category in filters.categories.active">
+											<label class="col-sm-5">${ category }</label>
+											<div class="togglebutton col-sm-4">
+												<label>
+												    <input type="checkbox" checked="" @change="toggleFilter('categories',category)">
+												    <span class="toggle"></span>
+												</label>
+											</div>
+											<div class="col-sm-2">
+												<a href="#" 
+														@click.prevent="removeFilterOption('categories',category)" >
+													<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
+											</div>
+										</div>
+									</div>
+									<div class="well well-sm" v-if="filters.mechanics.shown">
+										<div class="row">
+											<div class="col-sm-10 form-group" style="margin:0 0;">
+												<select class="form-control" @change="mechanicSelection">
+														<option value="" disabled selected>Choose a Mechanic</option>
+														<option :value="mechanic" 
+																v-for="mechanic in mechanics">${ mechanic }</option>
+												</select>
+											</div>
+											<div class="col-sm-1">
+												<a href="#" 
+													@click.prevent="removeFilter('mechanics')" 
+													class="pull-right">
+													<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
+											</div>
+										</div>
+										<div class="row" v-for="mechanic in filters.mechanics.active">
+											<label class="col-sm-5">${ mechanic }</label>
+											<div class="togglebutton col-sm-4">
+												<label>
+												    <input type="checkbox" checked="" @change="toggleFilter('mechanics',mechanic)">
+												    <span class="toggle"></span>
+												</label>
+											</div>
+											<div class="col-sm-2">
+												<a href="#" @click.prevent="removeFilterOption('mechanics',mechanic)">
+														<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
+											</div>
+										</div>
+									</div>
+									<div class="well well-sm" v-if="filters.suggested.shown">
+										<div class="row">
+											<div class="col-sm-10">
+												<label>(Poll) Number of Players</label>
+											</div>
+											<div class="col-sm-1">
+												<a href="#" 
+													@click.prevent="removeFilter('suggested')" 
+													class="pull-right">
+													<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<label>At least</label>
+											</div>
+											<div class="col-sm-3 form-group" style="margin:0 0;">
+												<select class="form-control" 
+														v-model="filters.suggested.percent"
+														@change="computeHidden">
+													<option v-for="n in 10" 
+														:value="n*10">${ n*10 }%</option>
+												</select>
+											</div>
+											<div class="col-sm-4">
+												<label> of voters</label>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-2">
+												<label>voted</label>
+											</div>
+											<div class="col-sm-9 form-group" style="margin:0 0;">
+												<select class="form-control" 
+														v-model="filters.suggested.rate"
+														@change="computeHidden">
+													<option value="best">Best</option>
+													<option value="bestorrec">Best or Recommended</option>
+													<option value="not">Not Recommended</option>
+												</select>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-2">
+												<label>with </label>
+											</div>
+											<div class="col-sm-4">
+												<input type="text" class="form-control" 
+														v-model="filters.suggested.players"
+														@change="computeHidden">
+											</div>
+											<div class="col-sm-3">
+												<label> players</label>
+											</div>
+										</div>
+						  			</div>
+						  		</div>
+							</div>
 						</div>
-					</div>
-					<div class="well well-sm" v-if="filters.expansions.shown">
-						<div class="row">
-							<label class="col-sm-5">
-								Exclude Expansions
-							</label>
-							<div class="col-sm-5">
-								<div class="togglebutton">
-								    <label>
-								      Off
-								      <input type="checkbox" id="expansions" @change="changeExpansions">
-								      <span class="toggle"></span>
-								      On
-								    </label>
-								</div>
+						<div class="panel panel-default">
+							<div class="panel-heading" role="tab" id="usersHeding">
+							  	<h4 class="panel-title">
+							    	<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#users" aria-expanded="false" aria-controls="collapseTwo">
+							      	Users
+							    	</a>
+							  </h4>
 							</div>
-							<div class="col-sm-1">
-								<a href="#" 
-									@click.prevent="removeFilter('expansions')" 
-									class="pull-right">
-									<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
-							</div>
-						</div>
-					</div>
-					<div class="well well-sm" v-if="filters.players.shown">
-						<div class="row">
-							<label class="col-sm-10">
-								Player Count  (${ playerCount })
-							</label>
-							<div class="col-sm-1">
-								<a href="#" 
-									@click.prevent="removeFilter('players')" 
-									class="pull-right">
-									<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-10 col-sm-offset-1">
-								<div class="slider shor">
-									<slider :slider-value="filters.players.value" 
-										:slider-min="1" 
-										:slider-max="endPlayerCount" 
-										:slider-step="1" 
-										v-on:updated="updateSlider('players',$event)"></slider>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="well well-sm" v-if="filters.playing_time.shown">
-						<div class="row">
-							<label class="col-sm-10">
-								Playing Time  (${ playTime })
-							</label>
-							<div class="col-sm-1">
-								<a href="#" 
-									@click.prevent="removeFilter('playing_time')" 
-									class="pull-right">
-									<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-10 col-sm-offset-1">
-								<div class="slider shor">
-									<slider :slider-value="filters.playing_time.value" 
-										:slider-min="0" 
-										:slider-max="endPlayTime" 
-										:slider-step="15" 
-										v-on:updated="updateSlider('playing_time', $event)"></slider>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="well well-sm" v-if="filters.weight.shown">
-						<div class="row">
-							<label class="col-sm-10">
-								Boardgame Weight (${ gameWeight })
-							</label>
-							<div class="col-sm-1">
-								<a href="#" 
-									@click.prevent="removeFilter('weight')" 
-									class="pull-right">
-									<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-10 col-sm-offset-1">
-								<div class="slider shor">
-									<slider :slider-value="filters.weight.value" 
-										:slider-min="0" 
-										:slider-max="5" 
-										:slider-step=".2" 
-										v-on:updated="updateSlider('weight', $event)"></slider>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="well well-sm" v-if="filters.rating.shown">
-						<div class="row">
-							<label class="col-sm-10">
-								Boardgame Rating  (${ gameRate })
-							</label>
-							<div class="col-sm-1">
-								<a href="#" 
-									@click.prevent="removeFilter('rating')" 
-									class="pull-right">
-									<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-10 col-sm-offset-1">
-								<div class="slider shor">
-									<slider :slider-value="filters.rating.value" 
-										:slider-min="0" 
-										:slider-max="10" 
-										:slider-step=".5" 
-										v-on:updated="updateSlider('rating', $event)"></slider>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="well well-sm" v-if="filters.categories.shown">
-						<div class="row">
-							<div class="col-sm-10 form-group" style="margin:0 0;">
-								<select class="form-control" @change="categorySelection">
-										<option value="" disabled selected>Choose a category</option>
-										<option :value="category" 
-												v-for="category in categories">${ category }</option>
-								</select>
-							</div>
-							<div class="col-sm-1">
-								<a href="#" 
-									@click.prevent="removeFilter('categories')" 
-									class="pull-right">
-									<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
-							</div>
-						</div>
-						<div class="row" v-for="category in filters.categories.active">
-							<label class="col-sm-5">${ category }</label>
-							<div class="togglebutton col-sm-4">
-								<label>
-								    <input type="checkbox" checked="" @change="toggleFilter('categories',category)">
-								    <span class="toggle"></span>
-								</label>
-							</div>
-							<div class="col-sm-2">
-								<a href="#" 
-										@click.prevent="removeFilterOption('categories',category)" >
-									<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
-							</div>
-						</div>
-					</div>
-					<div class="well well-sm" v-if="filters.mechanics.shown">
-						<div class="row">
-							<div class="col-sm-10 form-group" style="margin:0 0;">
-								<select class="form-control" @change="mechanicSelection">
-										<option value="" disabled selected>Choose a Mechanic</option>
-										<option :value="mechanic" 
-												v-for="mechanic in mechanics">${ mechanic }</option>
-								</select>
-							</div>
-							<div class="col-sm-1">
-								<a href="#" 
-									@click.prevent="removeFilter('mechanics')" 
-									class="pull-right">
-									<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
-							</div>
-						</div>
-						<div class="row" v-for="mechanic in filters.mechanics.active">
-							<label class="col-sm-5">${ mechanic }</label>
-							<div class="togglebutton col-sm-4">
-								<label>
-								    <input type="checkbox" checked="" @change="toggleFilter('mechanics',mechanic)">
-								    <span class="toggle"></span>
-								</label>
-							</div>
-							<div class="col-sm-2">
-								<a href="#" @click.prevent="removeFilterOption('mechanics',mechanic)">
-										<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
-							</div>
-						</div>
-					</div>
-					<div class="well well-sm" v-if="filters.suggested.shown">
-						<div class="row">
-							<div class="col-sm-10">
-								<label>(Poll) Number of Players</label>
-							</div>
-							<div class="col-sm-1">
-								<a href="#" 
-									@click.prevent="removeFilter('suggested')" 
-									class="pull-right">
-									<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-4">
-								<label>At least</label>
-							</div>
-							<div class="col-sm-3 form-group" style="margin:0 0;">
-								<select class="form-control" 
-										v-model="filters.suggested.percent"
-										@change="computeHidden">
-									<option v-for="n in 10" 
-										:value="n*10">${ n*10 }%</option>
-								</select>
-							</div>
-							<div class="col-sm-4">
-								<label> of voters</label>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-2">
-								<label>voted</label>
-							</div>
-							<div class="col-sm-9 form-group" style="margin:0 0;">
-								<select class="form-control" 
-										v-model="filters.suggested.rate"
-										@change="computeHidden">
-									<option value="best">Best</option>
-									<option value="bestorrec">Best or Recommended</option>
-									<option value="not">Not Recommended</option>
-								</select>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-2">
-								<label>with </label>
-							</div>
-							<div class="col-sm-4">
-								<input type="text" class="form-control" 
-										v-model="filters.suggested.players"
-										@change="computeHidden">
-							</div>
-							<div class="col-sm-3">
-								<label> players</label>
+							<div id="users" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="users">
+							  	<div class="panel-body">
+							   		<input type="text" 
+							   				class="form-control" 
+							   				value="" 
+							   				placeholder="Enter Username"
+							   				@keyup.enter="addUser" />
+
+							   		<div class="row" v-for="user in users">
+										<div class="col-sm-9">
+											${ user }
+										</div>
+										<div class="col-sm-1">
+											<a href="#" 
+												@click.prevent="removeUser(user)" 
+												class="pull-right">
+												<span class="glyphicon glyphicon-remove text-danger">&nbsp;</span></a>
+										</div>
+							   		</div>
+							  	</div>
 							</div>
 						</div>
 					</div>
@@ -263,7 +307,7 @@
 					</div>
 					<div class="flex-container row">
 						<div class="col-sm-3" v-for="game in games" v-if="_.indexOf(hidden, game.id) == -1">
-							<a href="#">
+							<a :href="gameUrl(game.id)">
 								<img :src="game.thumbnail" />
 							</a><br />
 							<label>${ game.name }</label>
@@ -279,7 +323,9 @@
 			delimiters: ['${', '}'],
 			el: '#app',
 			data: {
-				games: {{ games|safe }},
+				games: [],
+				userGames: {},
+				game_url: '{% url 'boardgame-detail' pk=0 %}',
 				filters: {
 					expansions: {
 						name: 'Exclude Expansions',
@@ -326,6 +372,7 @@
 						players: 4,
 					}
 				},
+				users: [],
 				endPlayerCount:10,
 				endPlayTime: 300,
 				hidden: [],
@@ -543,6 +590,45 @@
 					value = event.target.value;
 					event.target.value = '';
 					this.filters.mechanics.active.push(value)
+					this.computeHidden()
+				},
+				gameUrl: function(id) {
+					return this.game_url.slice(0,-2) + id + '/';
+				},
+				addUser: function(event) {
+					var value = event.target.value;
+					this.users.push(value);
+					// GET /someUrl
+					this.$http.get('{% url 'boardgames-list' %}?username='+value).then(response => {
+							// get body data
+							this.userGames[value] = response.body;
+							this.calcGames();
+
+					}, response => {
+						// error callback
+					});
+					event.target.value = '';
+				},
+				removeUser: function(user) {
+					var indexUser = _.indexOf(this.users, user);
+					if(indexUser != -1) {
+						this.users.splice(indexUser, 1);
+					}
+					if(typeof this.userGames[user] !== 'undefined') {
+						delete this.userGames[user];
+					}
+					this.calcGames();
+				},
+				calcGames: function() {
+					var games = {};
+					_.each(this.userGames, function(games_rpt, user, users) { 
+						_.each(games_rpt, function(game, index, games_rpt) { 
+							games[game.id] = game;
+						});
+					});
+					game_list = _.values(games);
+					game_list.sort(function(a, b){return a.name.localeCompare(b.name)});
+					this.games = game_list;
 					this.computeHidden()
 				},
 			},

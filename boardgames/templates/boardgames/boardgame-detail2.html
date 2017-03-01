@@ -4,65 +4,65 @@
 <div class="container">
 	<h2>{{ boardgame.name }}</h2>
 	<div class="row">
-		<div class="col s4">
+		<div class="col-sm-4">
 			<img src="{{ boardgame.image }}" style="width:100%" />
 		</div>
-		<div class="col s4">
+		<div class="col-sm-4">
 			<div id="chart_div"></div>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col s5">
+		<div class="col-sm-5">
 			<div class="row">
-				<label class="col s4">BGG ID: </label>
-				<div class="col s8">{{ boardgame.id }}</div>
+				<label class="col-sm-4">BGG ID: </label>
+				<div class="col-sm-8">{{ boardgame.id }}</div>
 			</div>
 			<div class="row">
-				<label class="col s4">Players: </label>
-				<div class="col s8">{{ boardgame.min_players }} - {{ boardgame.max_players}}</div>
+				<label class="col-sm-4">Players: </label>
+				<div class="col-sm-8">{{ boardgame.min_players }} - {{ boardgame.max_players}}</div>
 			</div>
 			<div class="row">
-				<label class="col s4">Best At: </label>
-				<div class="col s8">{{ boardgame.get_best_count }}</div>
+				<label class="col-sm-4">Best At: </label>
+				<div class="col-sm-8">{{ boardgame.get_best_count }}</div>
 			</div>
 			<div class="row">
-				<label class="col s4">Recommended: </label>
-				<div class="col s8">{{ boardgame.get_recommended_count }}</div>
+				<label class="col-sm-4">Recommended: </label>
+				<div class="col-sm-8">{{ boardgame.get_recommended_count }}</div>
 			</div>
 			<div class="row">
-				<label class="col s4">Playing Time: </label>
-				<div class="col s8">{{ boardgame.playing_time }}</div>
+				<label class="col-sm-4">Playing Time: </label>
+				<div class="col-sm-8">{{ boardgame.playing_time }}</div>
 			</div>
 			<div class="row">
-				<label class="col s4">Rating: </label>
-				<div class="col s8">{{ boardgame.rating_average }}</div>
+				<label class="col-sm-4">Rating: </label>
+				<div class="col-sm-8">{{ boardgame.rating_average }}</div>
 			</div>
 			<div class="row">
-				<label class="col s4">Bayes Rating: </label>
-				<div class="col s8">{{ boardgame.rating_bayes_average }}</div>
+				<label class="col-sm-4">Bayes Rating: </label>
+				<div class="col-sm-8">{{ boardgame.rating_bayes_average }}</div>
 			</div>
 			<div class="row">
-				<label class="col s4">Categories: </label>
-				<div class="col s8">{{ boardgame.categories|join:', ' }}</div>
+				<label class="col-sm-4">Categories: </label>
+				<div class="col-sm-8">{{ boardgame.categories|join:', ' }}</div>
 			</div>
 			<div class="row">
-				<label class="col s4">Mechanics: </label>
-				<div class="col s8">{{ boardgame.mechanics|join:', ' }}</div>
+				<label class="col-sm-4">Mechanics: </label>
+				<div class="col-sm-8">{{ boardgame.mechanics|join:', ' }}</div>
 			</div>
 			<div class="row">
-				<label class="col s2">Description: </label>
-				<div class="col s10"><pre style="font-family: inherit; white-space: pre-wrap;">{{ boardgame.description }}</pre></div>
+				<label class="col-sm-4">Description: </label>
+				<div class="col-sm-8"><pre style="font-family: inherit; white-space: pre-wrap; word-break:normal;background:inherit;border:none;">{{ boardgame.description }}</pre></div>
 			</div>
 		</div>
-		<div class="col s5 offset-s1">
+		<div class="col-sm-5 col-sm-offset-1">
 			{% if boardgame.ranks|length %}
 				<h5>Ranks: </h5>
 				{% for rank in boardgame.ranks %}
 					<div class="row">
-						<label class="col s4">
+						<label class="col-sm-4">
 							{{ rank.friendlyname }}
 						</label>
-						<div class="col s8">
+						<div class="col-sm-8">
 							{{ rank.value }}
 						</div>
 					</div>
@@ -72,7 +72,7 @@
 				<h5>Expansions: </h5>
 				{% for expansion in boardgame.expansions %}
 					<div class="row">
-						<div class="col s8 offset-s4">
+						<div class="col-sm-8 col-sm-offset-4">
 							{{ expansion.name }}
 						</div>
 					</div>
