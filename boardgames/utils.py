@@ -81,7 +81,7 @@ def get_user_collection(user_name):
 
     games = []
     for game in games_returned + list(games_cached.values()):
-        games.append(BoardGameExtension(game))
+        games.append(game)
 
     games.sort(key=lambda k: k.name)
     return games
@@ -98,4 +98,4 @@ def get_game_new(game_id):
         game = get_game_from_bgg(game_id)
         cache.add(game_id, game)
 
-    return BoardGameExtension(game)
+    return game

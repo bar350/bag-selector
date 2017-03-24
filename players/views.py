@@ -18,11 +18,8 @@ class UserProfile(DetailView):
 
 
 class VueIndex(TemplateView):
-    template_name = 'index.html'
+    template_name = 'indexPy.html'
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        boardgames = get_user_collection('bar350')
-        serializer = BoardGameSerializer(boardgames, many=True)
-        ctx['games'] = JSONRenderer().render(serializer.data)
         return ctx

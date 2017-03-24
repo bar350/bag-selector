@@ -10,10 +10,18 @@ class ThingSerializer(serializers.Serializer):
     name = serializers.CharField(read_only=True)
 
 
+class ThingsFieldSerializer(serializers.ListField):
+    child = ThingSerializer()
+
+
 class RankSerializer(serializers.Serializer):
     friendlyname = serializers.CharField(read_only=True)
     name = serializers.CharField(read_only=True)
     value = serializers.IntegerField(read_only=True)
+
+
+class RankFieldSerializer(serializers.ListField):
+    child = RankSerializer()
 
 
 class SuggestionResultsSerializer(serializers.Serializer):
@@ -37,9 +45,9 @@ class BoardGameSerializer(serializers.Serializer):
     categories = StringListField()
     description = serializers.CharField(read_only=True)
     designers = StringListField()
-    expands = ThingSerializer()
+    expands = ThingsFieldSerializer()
     expansion = serializers.BooleanField(read_only=True)
-    expansions = ThingSerializer()
+    expansions = ThingsFieldSerializer()
     families = StringListField()
     id = serializers.IntegerField(read_only=True)
     image = serializers.URLField(read_only=True)
@@ -57,7 +65,7 @@ class BoardGameSerializer(serializers.Serializer):
     min_playing_time = serializers.IntegerField(read_only=True)
     max_playing_time = serializers.IntegerField(read_only=True)
     publishers = StringListField()
-    ranks = RankSerializer()
+    ranks = RankFieldSerializer()
     rating_stddev = serializers.FloatField(read_only=True)
     player_suggestions = SuggestedPlayerField()
     thumbnail = serializers.URLField(read_only=True)
