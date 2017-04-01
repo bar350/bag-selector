@@ -10,3 +10,8 @@ CACHES = {
         "TIMEOUT": 2592000,
     }
 }
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "frontend/builds"),
+    os.path.join(BASE_DIR, "static"),
+]

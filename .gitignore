@@ -3,7 +3,6 @@ db.sqlite3
 *.pyc
 .DS_Store
 frontend/node_modules/
-frontend/build/
 frontend/bundles/
 npm-debug.log
 yarn-error.log
