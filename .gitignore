@@ -7,4 +7,3 @@ frontend/build/
 frontend/bundles/
 npm-debug.log
 yarn-error.log
-webpack-stats.json
