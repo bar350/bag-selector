@@ -88,7 +88,6 @@ export default {
       boardgame: { ranks: [{}] },
       loaded: false,
       gameId: this.$route.params.id,
-      game_url: 'http://127.0.0.1:8000/boardgames/boardgames/0/',
       chartType: 'ColumnChart',
       //chartType: 'PieChart',
       chartColumns: [ 
@@ -120,14 +119,19 @@ export default {
     fetchData: function() {
       this.gameId = this.$route.params.id;
       if(this.gameId) {
-        this.$http.get(this.realGameUrl).then(response => {
-            // get body data
-            this.boardgame = response.body;
-            this.loaded = true;
-            console.log(this.boardgame);
-        }, response => {
-          // error callback
-        });
+        let game = this.$store.getters.getGame(this.gameId)
+        if(game) {
+          this.boardgame = game 
+          this.loaded = true
+        } else {
+          this.$http.get(this.gameId+'/').then(response => {
+              // get body data
+              this.boardgame = response.body;
+              this.loaded = true;
+          }, response => {
+            // error callback
+          });
+        }
       }
     },
   },
@@ -145,9 +149,6 @@ export default {
       } else {
         return '';
       }
-    },
-    'realGameUrl': function() {
-      return this.game_url.slice(0,-2) + this.gameId + '/';
     },
     'chartRows': function() {
       var rows = []

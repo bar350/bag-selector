@@ -24,5 +24,5 @@ urlpatterns = [
     url(r'^users/', include('players.urls')),
     url(r'^boardgames/', include('boardgames.urls')),
     # url(r'test', TemplateView.as_view(template_name="index.html")),
-    url(r'', VueIndex.as_view()),
+    url(r'', VueIndex.as_view(), name="base"),
 ]

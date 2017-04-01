@@ -2,6 +2,13 @@
 {% load static %}
 {% load render_bundle from webpack_loader %}
 
+{% block scripts %}
+	<script type="text/javascript">
+		RESOURCE_URL = '{% url 'boardgames-list' %}'
+		LOADING_URL = '{% static 'loading.gif' %}'
+	</script>
+{% endblock %}
+
 {% block content %}
 	<div id="app">
 	</div>

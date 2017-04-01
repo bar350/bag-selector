@@ -1,4 +1,5 @@
 from boardgamegeek import BGGClient
+from boardgamegeek.exceptions import BGGItemNotFoundError, BGGApiRetryError
 from django.core.cache import cache
 from config.utils import CacheBackendRedis
 import json
@@ -46,7 +47,11 @@ def createBGGClient():
 
 def get_user_from_bgg(user_name):
     bgg = createBGGClient()
-    collection = bgg.collection(user_name, own=True)
+    try:
+        collection = bgg.collection(user_name)
+    except (BGGItemNotFoundError, BGGApiRetryError) as err:
+        raise err
+
     return collection
 
 
@@ -54,7 +59,10 @@ def get_user_collection(user_name):
     collection = cache.get('collection_' + user_name, None)
 
     if collection is None:
-        collection = get_user_from_bgg(user_name)
+        try:
+            collection = get_user_from_bgg(user_name)
+        except (BGGItemNotFoundError, BGGApiRetryError) as err:
+            raise err
         cache.add('collection_' + user_name, collection)
 
     if collection is None:
@@ -84,7 +92,7 @@ def get_user_collection(user_name):
         games.append(game)
 
     games.sort(key=lambda k: k.name)
-    return games
+    return (collection, games)
 
 
 def get_game_from_bgg(game_id):
