@@ -55,23 +55,7 @@ def get_user_from_bgg(user_name):
     return collection
 
 
-def get_user_collection(user_name):
-    collection = cache.get('collection_' + user_name, None)
-
-    if collection is None:
-        try:
-            collection = get_user_from_bgg(user_name)
-        except (BGGItemNotFoundError, BGGApiRetryError) as err:
-            raise err
-        cache.add('collection_' + user_name, collection)
-
-    if collection is None:
-        return None
-
-    owned_games = []
-    for game in collection.items:
-        if game.owned:
-            owned_games.append(str(game.id))
+def get_games(owned_games):
     games_cached = cache.get_many(['game_' + game_id for game_id in owned_games])
 
     lookup_games = list(set(owned_games) - set([game_id[5:]
@@ -92,6 +76,27 @@ def get_user_collection(user_name):
         games.append(game)
 
     games.sort(key=lambda k: k.name)
+    return games
+
+def get_user_collection(user_name):
+    collection = cache.get('collection_' + user_name, None)
+
+    if collection is None:
+        try:
+            collection = get_user_from_bgg(user_name)
+        except (BGGItemNotFoundError, BGGApiRetryError) as err:
+            raise err
+        cache.add('collection_' + user_name, collection)
+
+    if collection is None:
+        return None
+
+    owned_games = []
+    for game in collection.items:
+        if game.owned:
+            owned_games.append(str(game.id))
+    
+    games = get_games(owned_games)
     return (collection, games)
 
 

@@ -17,7 +17,7 @@ CACHES = {
 }
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "frontend/bundles"),
-    os.path.join(BASE_DIR, "frontend/builds"),
+    os.path.join(BASE_DIR, "frontend/build"),
     os.path.join(BASE_DIR, "static"),
 ]
 
