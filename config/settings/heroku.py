@@ -3,6 +3,9 @@ import os
 
 DEBUG = True
 ALLOWED_HOSTS = ['*']
+
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
