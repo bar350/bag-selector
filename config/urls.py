@@ -16,15 +16,12 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic import TemplateView
-from players.views import VueIndex
+from boardgames.views import VueIndex
 from boardgames.views import export_game_list_csv
 
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^users/', include('players.urls')),
-    url(r'^boardgames/', include('boardgames.urls')),
+	url(r'^boardgames/', include('boardgames.urls')),
     url(r'^export_games$', export_game_list_csv, name='game-export'),
-    # url(r'test', TemplateView.as_view(template_name="index.html")),
     url(r'', VueIndex.as_view(), name="base"),
 ]

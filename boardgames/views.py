@@ -9,12 +9,11 @@ from rest_framework import status
 from .utils import get_games
 
 
-class BoardGameDetails(TemplateView):
-    template_name = "boardgames/boardgame-detail2.html"
+class VueIndex(TemplateView):
+    template_name = 'indexPy.html'
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx['boardgame'] = get_game_new(self.kwargs['pk'])
         return ctx
 
 

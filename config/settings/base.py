@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'boardgames',
-    'players',
     'webpack_loader',
 ]
 

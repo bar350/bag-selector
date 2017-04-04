@@ -14,14 +14,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from .views import BoardGameDetails
 from .viewset import BoardgameViewSet
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r'boardgames', BoardgameViewSet, base_name='boardgames')
 urlpatterns = router.urls
-
-urlpatterns.append(
-    url(r'^game/(?P<pk>[0-9]+)/$', BoardGameDetails.as_view(), name='boardgame-detail'),
-)
