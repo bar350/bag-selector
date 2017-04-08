@@ -3,6 +3,7 @@
 {% load render_bundle from webpack_loader %}
 
 {% block scripts %}
+	<!-- register the neccessary urls using Djangos url router dynamicly -->
 	<script type="text/javascript">
 		RESOURCE_URL = '{% url 'boardgames-list' %}'
 		LOADING_URL = '{% static 'loading.gif' %}'

@@ -8,10 +8,13 @@ from rest_framework import status
 
 class BoardgameViewSet(viewsets.ViewSet):
     """
-    A simple ViewSet for listing or retrieving users.
+    A view set responible to handeling interactions to get boardgames.
     """
 
     def list(self, request):
+        ''' When boardgame list is called require a username be passed in
+            Lookup the board games for this username then return the 
+            games that user owns as well as information on those users connections. '''
         username = request.GET.get('username', None)
         if username is not None:
             try:
@@ -34,6 +37,7 @@ class BoardgameViewSet(viewsets.ViewSet):
         return Response({'collection': collectionSerialized.data, 'games': serializer.data})
 
     def retrieve(self, request, pk=None):
+        ''' Retrieve a single game based upon the boardgame id '''
         boardgame = get_game_new(pk)
         serializer = BoardGameSerializer(boardgame)
         return Response(serializer.data)

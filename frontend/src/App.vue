@@ -16,6 +16,7 @@
 </template>
 
 <script>
+// Start the View instance on the Application
 export default {
   name: 'app'
 }

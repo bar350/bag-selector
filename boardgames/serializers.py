@@ -1,5 +1,8 @@
 from rest_framework import serializers
 
+''' Represent the objects returned from the BGG library as serializable objects
+    Mapping the objects to the Rest Framework serialiable objects allows the data
+    to be turned into JSON and able to be sent to the browser to be managed. '''
 
 class StringListField(serializers.ListField):
     child = serializers.CharField(read_only=True)

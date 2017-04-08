@@ -1,5 +1,4 @@
 from django.views.generic import TemplateView
-# from .models import BoardGame
 from .utils import get_game_new
 import csv
 
@@ -9,6 +8,8 @@ from rest_framework import status
 from .utils import get_games
 
 
+''' Base view this views is only responsible for loading the template 
+    this template then runs the vue.js code responsible for the application '''
 class VueIndex(TemplateView):
     template_name = 'indexPy.html'
 
@@ -17,6 +18,10 @@ class VueIndex(TemplateView):
         return ctx
 
 
+''' Export view which is called as a POST route, 
+    this view requires a list of game ids to be passed in. 
+    This view will then output a CSV to the caller with the informaiton
+    on the supplied games '''
 def export_game_list_csv(request):
     if request.method != "POST":
     	return Response({"Must Pass in a List of Game IDs"},

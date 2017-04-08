@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import _ from 'lodash'
 
+// Load vuex into the Vue instance
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
@@ -93,6 +94,7 @@ export const store = new Vuex.Store({
     	endPlayTime: state => {
     		return state.endPlayTime;
     	},
+    	// Get all the categories on the currently loaded games 
 	    categories: state => {
 	      let cats = []
 	      _.each(state.games, function (game, index, games) {
@@ -105,6 +107,7 @@ export const store = new Vuex.Store({
 	      cats.sort()
 	      return cats
 	    },
+	    // Get all the mechanics on the currently loaded games
 	    mechanics: state => {
 	      let cats = []
 	      _.each(state.games, function (game, index, games) {
@@ -117,6 +120,7 @@ export const store = new Vuex.Store({
 	      cats.sort()
 	      return cats
 	    },
+	    // Return a display for player count filter
 	    playerCount: state => {
 	      let countStr = state.filters.players.value[0] + ' To ' + state.filters.players.value[1]
 	      if (state.filters.players.value[1] == state.endPlayerCount) {
@@ -125,6 +129,7 @@ export const store = new Vuex.Store({
 	     
 	      return countStr
 	    },
+	    // Return a display for player time filter
 	    playTime: state => {
 	      let countStr = state.filters.playing_time.value[0] + ' To ' + state.filters.playing_time.value[1]
 	      if (state.filters.playing_time.value[1] == state.endPlayTime) {
@@ -133,15 +138,18 @@ export const store = new Vuex.Store({
 	     
 	      return countStr
 	    },
+	    // Return a display for game Weight filter
 	    gameWeight: state => {
 	      let countStr = state.filters.weight.value[0] + ' To ' + state.filters.weight.value[1]
 	     
 	      return countStr
 	    },
+	    // Return a display for game rate filter
 	    gameRate: state => {
 	      let countStr = state.filters.rating.value[0] + ' To ' + state.filters.rating.value[1]
 	      return countStr
 	    },
+	    /* Check methods for the filters to see if a given game meets the filter specifications */
 	    checkExpansions: (state) => (game) => {
 	      // If Game is an expansion and the expansion filter has been added
 	      // as well if the expansion fiter is on

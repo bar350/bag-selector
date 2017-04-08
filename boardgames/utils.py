@@ -4,41 +4,9 @@ from django.core.cache import cache
 from config.utils import CacheBackendRedis
 import json
 
-
-class BoardGameExtension(object):
-
-    def __init__(self, bg):
-        self._bg = bg
-
-    def __getattr__(self, var):
-        # for non altered functions, properties
-        # just do what _bg would do
-        return self._bg.__getattribute__(var)
-
-    def get_best_count(self):
-        best_list = []
-        for suggestion in self.player_suggestions:
-            total = suggestion.best + suggestion.recommended + suggestion.not_recommended
-            if total != 0 and (suggestion.best / total) * 100 > 50:
-                best_list.append(suggestion.player_count)
-        best_list.sort()
-        return ", ".join(best_list)
-
-    def get_recommended_count(self):
-        best_list = []
-        for suggestion in self.player_suggestions:
-            total = suggestion.best + suggestion.recommended + suggestion.not_recommended
-            if (total != 0 and
-                    ((suggestion.recommended + suggestion.best) / total) * 100 > 50):
-                best_list.append(suggestion.player_count)
-        best_list.sort()
-        return ", ".join(best_list)
-
-    def jsonify(self):
-        return json.dumps(self._bg._data)
-
-
 def createBGGClient():
+    ''' Abstract the creation of the BGG Client, 
+        so that if any changes need to be they can be made in one place '''
     # redis_backend = CacheBackendRedis(ttl=2592000)
     # bgg = BGGClient(cache=redis_backend)
     bgg = BGGClient()
@@ -46,6 +14,7 @@ def createBGGClient():
 
 
 def get_user_from_bgg(user_name):
+    ''' Abstract the user collection retrival from bgg '''
     bgg = createBGGClient()
     try:
         collection = bgg.collection(user_name)
@@ -56,6 +25,10 @@ def get_user_from_bgg(user_name):
 
 
 def get_games(owned_games):
+    ''' Take a list of games as input
+        Check the cache for the games by id, return those that are available in the cache
+        For any that are not available in the cache create a connection to bgg 
+        Retrieve 50 games at a time from BGG. Then return those games '''
     games_cached = cache.get_many(['game_' + game_id for game_id in owned_games])
 
     lookup_games = list(set(owned_games) - set([game_id[5:]
@@ -79,6 +52,10 @@ def get_games(owned_games):
     return games
 
 def get_user_collection(user_name):
+    ''' Given a username check the cache for that users collection information
+        If the Collection is not found connect to BGG and retrieve the users connection
+        Then call get_games to retireve the users owned games. 
+        Lastly return the collection and the games '''
     collection = cache.get('collection_' + user_name, None)
 
     if collection is None:
@@ -101,11 +78,15 @@ def get_user_collection(user_name):
 
 
 def get_game_from_bgg(game_id):
+    ''' Retrieve a single game from BoardGameGeek '''
     bgg = createBGGClient()
     return bgg.game(game_id=game_id)
 
 
 def get_game_new(game_id):
+    ''' Check the cache for a given game id 
+        If it doesn't exist call get_game_from_bgg
+        Return the game information '''
     game = cache.get('game_' + game_id, None)
     if game is None:
         game = get_game_from_bgg(game_id)
